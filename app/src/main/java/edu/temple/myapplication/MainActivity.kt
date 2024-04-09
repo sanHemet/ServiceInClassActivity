@@ -7,13 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.widget.Button
 import kotlin.concurrent.timer
 
 class MainActivity : AppCompatActivity() {
 
     var timerBinder : TimerService.TimerBinder? = null
-    lateinit var timerHandler: Handler
+
+    var handler = Handler(Looper.getMainLooper()) {
+        true
+    }
 
     val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -38,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
 
         findViewById<Button>(R.id.startButton).setOnClickListener {
-            timerBinder?.start(3000, timerHandler)
+            timerBinder?.start(3000, handler)
         }
 
         findViewById<Button>(R.id.pauseButton).setOnClickListener {
